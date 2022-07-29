@@ -95,7 +95,7 @@ class App {
       const editEL = e.target.closest('.workout__edit');
       if (!deleteElement) {
         this._moveToPopup(e);
-        this._editWorkout(e);
+        this._editWorkout(e, workoutMother.dataset.id);
       } else {
         if (!workoutMother) return;
         this._deleteWorkout(workoutMother.dataset.id);
@@ -339,7 +339,7 @@ class App {
     this._setLocalStorage();
   }
 
-  _editWorkout(e) {
+  _editWorkout(e, id) {
     const contentContain = document.querySelector('.content-container');
     const closeModal = document.querySelector('.close-modal');
 
@@ -347,52 +347,63 @@ class App {
       editModal.classList.remove('hidden');
       modalOverlay.classList.remove('hidden');
 
-      const injectHtml = `
-          <form class="form edit">
-          <div class="form__row">
-            <label class="form__label">Type</label>
-            <select class="form__input form__input--type">
-              <option value="running">Running</option>
-              <option value="cycling">Cycling</option>
-            </select>
-          </div>
-          <div class="form__row">
-            <label class="form__label">Distance</label>
-            <input class="form__input form__input--distance" placeholder="km" />
-          </div>
-          <div class="form__row">
-            <label class="form__label">Duration</label>
-            <input
-              class="form__input form__input--duration"
-              placeholder="min"
-            />
-          </div>
-          <div class="form__row">
-            <label class="form__label">Cadence</label>
-            <input
-              class="form__input form__input--cadence"
-              placeholder="step/min"
-            />
-          </div>
-          <div class="form__row form__row--hidden">
-            <label class="form__label">Elev Gain</label>
-            <input
-              class="form__input form__input--elevation"
-              placeholder="meters"
-            />
-          </div>
-        </form>
-        <button class="btn_save">
-            <p class="btnSaveText">Save</p>
-            <div class="check-box">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-                    <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
-                </svg>
+      this.#workouts.forEach((workout) => {
+        if (workout.id === id) {
+          // console.log('found:', workout);
+          let injectHtml = `
+            <form class="form">
+            <div class="form__row edit">
+              <label class="form__label">Type</label>
+              <select class="form__input form__input--type">
+                <option value="running">Running</option>
+                <option value="cycling">Cycling</option>
+              </select>
             </div>
-        </button>
-      `;
+            <div class="form__row">
+              <label class="form__label">Distance</label>
+              <input class="form__input form__input--distance" placeholder="km" value="${workout.distance}"/>
+            </div>
+            <div class="form__row">
+              <label class="form__label">Duration</label>
+              <input
+                class="form__input form__input--duration"
+                placeholder="min" value='${workout.duration}'
+              />
+            </div>`;
+            
+          if (workout.type === 'running') {
+            injectHtml += `<div class="form__row">
+              <label class="form__label">Cadence</label>
+              <input
+                class="form__input form__input--cadence"
+                placeholder="step/min" value='${workout.cadence}'
+              />
+            </div>`;
+          }
+          if (workout.type === 'cycling') {
+            injectHtml += `
+            <div class="form__row">
+              <label class="form__label">Elev Gain</label>
+              <input
+                class="form__input form__input--elevation"
+                placeholder="meters" value='${workout.elevationGain}'
+              />
+            </div>`;
+          }
 
-      contentContain.insertAdjacentHTML('beforeend', injectHtml);
+          injectHtml += `<button class="btn_save">
+              <p class="btnSaveText">Save</p>
+              <div class="check-box">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                      <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                  </svg>
+              </div>
+            </button>
+            </form>
+          `;
+          contentContain.insertAdjacentHTML('beforeend', injectHtml);
+        }
+      });
 
       const modalCloser = function () {
         editModal.classList.add('hidden');
@@ -402,24 +413,22 @@ class App {
 
       closeModal.addEventListener('click', modalCloser);
       modalOverlay.addEventListener('click', modalCloser);
-      window.addEventListener('keydown', function (e) {
-        if (e === 'Escape') {
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !editModal.classList.contains('hidden')) {
           modalCloser();
-          console.log('working');
         }
       });
 
       // Save Button
       const btnSave = document.querySelector('.btn_save');
       const btnText = document.querySelector('.btnSaveText');
-      console.log(btnSave);
-      btnSave.addEventListener('click', function () {
+      btnSave.addEventListener('click', function (e) {
+        e.preventDefault();
+        // document.querySelector('.edit').style.display = 'none';
+        // document.querySelector('.edit').classList.add('hidden');
         btnText.innerHTML = 'Saved';
         btnSave.classList.add('active');
-
         setTimeout(() => {
-          btnSave.classList.remove('active');
-          btnText.innerHTML = 'Save';
           modalCloser();
         }, 3500);
       });

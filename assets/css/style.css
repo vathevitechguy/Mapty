@@ -22,7 +22,7 @@ html {
 }
 
 body {
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   color: var(--color-light--2);
   font-weight: 400;
   line-height: 1.6;
@@ -307,4 +307,69 @@ a:visited {
   background-color: rgba(0, 0, 0, 0.302);
   backdrop-filter: blur(3px);
   z-index: 10;
+}
+
+.btn_save {
+  width: 150px;
+  height: 50px;
+  border: none;
+  outline: none;
+  background: #2f2f2f;
+  color: #fff !important;
+  font-size: 22px;
+  border-radius: 40px;
+  text-align: center;
+  box-shadow: 0 6px 20px -5px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.btn_save p {
+  color: #fff;
+}
+.check-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 40px;
+  box-shadow: 0 0 12px -2px rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  right: -40px;
+  opacity: 0;
+}
+
+.check-box svg {
+  width: 30px;
+  margin: 7px;
+}
+
+svg path {
+  stroke-width: 3;
+  stroke: #fff;
+  stroke-dasharray: 34;
+  stroke-dashoffset: 34;
+  stroke-linecap: round;
+}
+
+.active {
+  background: #18d221;
+  transition: 1s;
+}
+
+.active .check-box {
+  right: 0;
+  opacity: 1;
+  transition: 1s;
+}
+
+.active p {
+  margin-right: 50px;
+  transition: 1s;
+  color: #fff !important;
+}
+
+.active svg path {
+  stroke-dashoffset: 0;
+  transition: 1s;
+  transition-delay: 1s;
 }

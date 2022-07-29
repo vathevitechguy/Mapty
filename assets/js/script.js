@@ -381,18 +381,47 @@ class App {
               placeholder="meters"
             />
           </div>
-          <button class="form__btn">OK</button>
         </form>
+        <button class="btn_save">
+            <p class="btnSaveText">Save</p>
+            <div class="check-box">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                    <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                </svg>
+            </div>
+        </button>
       `;
 
       contentContain.insertAdjacentHTML('beforeend', injectHtml);
 
-      closeModal.addEventListener('click', function () {
+      const modalCloser = function () {
         editModal.classList.add('hidden');
         modalOverlay.classList.add('hidden');
+        contentContain.innerHTML = '';
+      };
 
-        const contEl = document.querySelector('.edit');
-        contEl.remove();
+      closeModal.addEventListener('click', modalCloser);
+      modalOverlay.addEventListener('click', modalCloser);
+      window.addEventListener('keydown', function (e) {
+        if (e === 'Escape') {
+          modalCloser();
+          console.log('working');
+        }
+      });
+
+      // Save Button
+      const btnSave = document.querySelector('.btn_save');
+      const btnText = document.querySelector('.btnSaveText');
+      console.log(btnSave);
+      btnSave.addEventListener('click', function () {
+        btnText.innerHTML = 'Saved';
+        btnSave.classList.add('active');
+
+        setTimeout(() => {
+          btnSave.classList.remove('active');
+          btnText.innerHTML = 'Save';
+          modalCloser();
+        }, 3500);
       });
     }
   }

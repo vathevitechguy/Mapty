@@ -340,11 +340,61 @@ class App {
   }
 
   _editWorkout(e) {
+    const contentContain = document.querySelector('.content-container');
+    const closeModal = document.querySelector('.close-modal');
+
     if (e.target === e.target.closest('.workout__edit')) {
       editModal.classList.remove('hidden');
       modalOverlay.classList.remove('hidden');
+
+      const injectHtml = `
+          <form class="form edit">
+          <div class="form__row">
+            <label class="form__label">Type</label>
+            <select class="form__input form__input--type">
+              <option value="running">Running</option>
+              <option value="cycling">Cycling</option>
+            </select>
+          </div>
+          <div class="form__row">
+            <label class="form__label">Distance</label>
+            <input class="form__input form__input--distance" placeholder="km" />
+          </div>
+          <div class="form__row">
+            <label class="form__label">Duration</label>
+            <input
+              class="form__input form__input--duration"
+              placeholder="min"
+            />
+          </div>
+          <div class="form__row">
+            <label class="form__label">Cadence</label>
+            <input
+              class="form__input form__input--cadence"
+              placeholder="step/min"
+            />
+          </div>
+          <div class="form__row form__row--hidden">
+            <label class="form__label">Elev Gain</label>
+            <input
+              class="form__input form__input--elevation"
+              placeholder="meters"
+            />
+          </div>
+          <button class="form__btn">OK</button>
+        </form>
+      `;
+
+      contentContain.insertAdjacentHTML('beforeend', injectHtml);
+
+      closeModal.addEventListener('click', function () {
+        editModal.classList.add('hidden');
+        modalOverlay.classList.add('hidden');
+
+        const contEl = document.querySelector('.edit');
+        contEl.remove();
+      });
     }
-    // const editEL = document.querySelector(`[data-id="${id}"]`);
   }
 
   _setLocalStorage() {

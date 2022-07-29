@@ -349,12 +349,11 @@ class App {
 
       this.#workouts.forEach((workout) => {
         if (workout.id === id) {
-          // console.log('found:', workout);
           let injectHtml = `
             <form class="form">
             <div class="form__row edit">
               <label class="form__label">Type</label>
-              <select class="form__input form__input--type">
+              <select class="form__input edit__form--type form__input--type">
                 <option value="running">Running</option>
                 <option value="cycling">Cycling</option>
               </select>
@@ -369,27 +368,43 @@ class App {
                 class="form__input form__input--duration"
                 placeholder="min" value='${workout.duration}'
               />
-            </div>`;
+            </div>
             
-          if (workout.type === 'running') {
-            injectHtml += `<div class="form__row">
+            <div class="form__row">
               <label class="form__label">Cadence</label>
               <input
-                class="form__input form__input--cadence"
+                class="form__input form__input--cadence edit__input--cadence"
                 placeholder="step/min" value='${workout.cadence}'
               />
-            </div>`;
-          }
-          if (workout.type === 'cycling') {
-            injectHtml += `
-            <div class="form__row">
+            </div>
+            
+            <div class="form__row form__row--hidden">
               <label class="form__label">Elev Gain</label>
               <input
-                class="form__input form__input--elevation"
+                class="form__input form__input--elevation edit__input--elevation"
                 placeholder="meters" value='${workout.elevationGain}'
               />
             </div>`;
-          }
+
+          // if (workout.type === 'running') {
+          //   injectHtml += `<div class="form__row">
+          //     <label class="form__label">Cadence</label>
+          //     <input
+          //       class="form__input form__input--cadence"
+          //       placeholder="step/min" value='${workout.cadence}'
+          //     />
+          //   </div>`;
+          // }
+          // if (workout.type === 'cycling') {
+          //   injectHtml += `
+          //   <div class="form__row">
+          //     <label class="form__label">Elev Gain</label>
+          //     <input
+          //       class="form__input form__input--elevation"
+          //       placeholder="meters" value='${workout.elevationGain}'
+          //     />
+          //   </div>`;
+          // }
 
           injectHtml += `<button class="btn_save">
               <p class="btnSaveText">Save</p>
@@ -402,6 +417,26 @@ class App {
             </form>
           `;
           contentContain.insertAdjacentHTML('beforeend', injectHtml);
+
+          // DOM
+          const editType = document.querySelector('.edit__form--type');
+          const editCadence = document.querySelector('.edit__input--cadence');
+          const editElevation = document.querySelector(
+            '.edit__input--elevation'
+          );
+
+          editType.value = workout.type;
+          editType.addEventListener('change', function () {
+            editCadence
+              .closest('.form__row')
+              .classList.toggle('form__row--hidden');
+            editElevation
+              .closest('.form__row')
+              .classList.toggle('form__row--hidden');
+
+            editCadence.value = '';
+            editElevation.value = '';
+          });
         }
       });
 

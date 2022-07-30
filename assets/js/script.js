@@ -386,29 +386,8 @@ class App {
                 class="form__input form__input--elevation edit__input--elevation"
                 placeholder="meters" value='${workout.elevationGain}'
               />
-            </div>`;
-
-          // if (workout.type === 'running') {
-          //   injectHtml += `<div class="form__row">
-          //     <label class="form__label">Cadence</label>
-          //     <input
-          //       class="form__input form__input--cadence"
-          //       placeholder="step/min" value='${workout.cadence}'
-          //     />
-          //   </div>`;
-          // }
-          // if (workout.type === 'cycling') {
-          //   injectHtml += `
-          //   <div class="form__row">
-          //     <label class="form__label">Elev Gain</label>
-          //     <input
-          //       class="form__input form__input--elevation"
-          //       placeholder="meters" value='${workout.elevationGain}'
-          //     />
-          //   </div>`;
-          // }
-
-          injectHtml += `<button class="btn_save">
+            </div>
+            <button class="btn_save">
               <p class="btnSaveText">Save</p>
               <div class="check-box">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
@@ -418,6 +397,7 @@ class App {
             </button>
             </form>
           `;
+
           contentContain.insertAdjacentHTML('beforeend', injectHtml);
 
           // DOM
@@ -434,6 +414,7 @@ class App {
             cadence.closest('.form__row').classList.toggle('form__row--hidden');
           };
 
+          // Prefilling Workout type data on Form
           editType.value = workout.type;
           if (editType.value === 'cycling') {
             toggleEditType(editCadence, editElevation);

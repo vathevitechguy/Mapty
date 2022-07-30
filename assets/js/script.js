@@ -95,6 +95,7 @@ class App {
       const editEL = e.target.closest('.workout__edit');
       if (!deleteElement) {
         this._moveToPopup(e);
+        if (!workoutMother) return;
         this._editWorkout(e, workoutMother.dataset.id);
       } else {
         if (!workoutMother) return;
@@ -350,6 +351,7 @@ class App {
       this.#workouts.forEach((workout) => {
         if (workout.id === id) {
           let injectHtml = `
+          <h1>Editing: ${workout.description}</h1>
             <form class="form">
             <div class="form__row edit">
               <label class="form__label">Type</label>
@@ -425,17 +427,27 @@ class App {
             '.edit__input--elevation'
           );
 
-          editType.value = workout.type;
-          editType.addEventListener('change', function () {
-            editCadence
+          const toggleEditType = function (cadence, elevation) {
+            elevation
               .closest('.form__row')
               .classList.toggle('form__row--hidden');
-            editElevation
-              .closest('.form__row')
-              .classList.toggle('form__row--hidden');
+            cadence.closest('.form__row').classList.toggle('form__row--hidden');
+          };
 
-            editCadence.value = '';
-            editElevation.value = '';
+          editType.value = workout.type;
+          if (editType.value === 'cycling') {
+            toggleEditType(editCadence, editElevation);
+          }
+          editType.addEventListener('change', function () {
+            toggleEditType(editCadence, editElevation);
+            if (!workout.cadence) {
+              editCadence.value = '';
+              editElevation.value = workout.elevationGain;
+            }
+            if (!workout.elevationGain) {
+              editCadence.value = workout.cadence;
+              editElevation.value = '';
+            }
           });
         }
       });
